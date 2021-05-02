@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 const cotterApiKeyId = process.env.NEXT_PUBLIC_COTTER_API_KEY_ID;
 
 export default function Home() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [clientProjects, setClientProjects] = useState(null);
 
     // Gets this client's projects when they're logged in
@@ -16,6 +15,8 @@ export default function Home() {
         });
         setClientProjects(await resp.json());
     };
+
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     // Shows the Cotter Login form and sets Access Token when authenticated
     useEffect(() => {
@@ -38,6 +39,12 @@ export default function Home() {
         }
     }, []);
 
+    // Deletes Access Token and logs user out
+    const logOut = () => {
+        localStorage.removeItem("ACCESS_TOKEN");
+        setIsLoggedIn(false);
+    };
+
     // Allow clients to mark a project as complete
     const markProjectComplete = async (e) => {
         const completeProjectId = e.target.value;
@@ -53,12 +60,6 @@ export default function Home() {
             headers: { Authorization: `Bearer ${token}` },
             method: "PUT",
         });
-    };
-
-    // Deletes Access Token and logs user out
-    const logOut = () => {
-        localStorage.removeItem("ACCESS_TOKEN");
-        setIsLoggedIn(false);
     };
 
     // Display the client portal page
