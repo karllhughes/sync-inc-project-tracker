@@ -1,4 +1,4 @@
-# A starter repo for building your a completely custom client portal on Airtable
+# A starter repo for building a completely custom client portal on Airtable
 
 ![End state](https://docs.syncinc.so/assets/client-portal/01.png)
 
