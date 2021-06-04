@@ -1,16 +1,16 @@
-This repository is a starter for building your own completely custom client portal on Airtable:
+# A starter repo for building your a completely custom client portal on Airtable
 
 ![End state](https://docs.syncinc.so/assets/client-portal/01.png)
 
 You can build this project from scratch by following **[the step-by-step guide](https://docs.syncinc.so/playbooks/client-portal)**.
 
-Or, you can simply update the `.env` file with your credntials and start building from this foundation.
+Or, you can simply start building from this foundation 🚀
 
 ## Getting Started
 
 1. Clone the project.
 2. Install the dependencies with `npm install`
-3. Open the `.env.local` file and add your enivironment variables for (1) Cotter (2) Sync Inc and (2) Airtable
+3. Create a `.env.local` file and add your enivironment variables for (1) [Cotter](https://www.cotter.app/) (2) [Sync Inc](https://syncinc.so) and (2) [Airtable](https://airtable.com)
 
 ```bash
 # .env.local file
@@ -23,4 +23,4 @@ AIRTABLE_BASE="..."
 4. Launch your development environment `npm run dev`
 
 ## Deploy to Vercel
-Once you've built your client portal, you can deploy your Next.js app using Vercel.
+Once you've built your client portal, you can deploy your Next.js app using [Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
