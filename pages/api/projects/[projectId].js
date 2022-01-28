@@ -1,4 +1,4 @@
-import {CotterValidateJWT} from "cotter-node";
+//import {CotterValidateJWT} from "cotter-node";
 import Airtable from "airtable";
 
 const base = new Airtable({
@@ -22,7 +22,7 @@ export default async (req, res) => {
 
     try {
         // Check that the JWT is valid
-        const valid = await CotterValidateJWT(token);
+        const valid = false //await CotterValidateJWT(token);
         if (!valid) {
             res.statusCode(403);
             res.end("Authentication token invalid");

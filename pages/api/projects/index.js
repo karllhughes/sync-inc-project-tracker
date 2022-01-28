@@ -1,4 +1,4 @@
-import {CotterAccessToken} from "cotter-token-js";
+//import {CotterAccessToken} from "cotter-token-js";
 const {Pool} = require('pg');
 const connectionString = process.env.PG_CONNECTION_STRING;
 const pool = new Pool({
@@ -19,7 +19,7 @@ export default async (req, res) => {
 
     try {
         // Decode the Cotter JWT, "decoded.payload.identifier" is the user's email
-        const decoded = new CotterAccessToken(token);
+        const decoded = {}//new CotterAccessToken(token);
 
         // Get design_projects by clients.email
         // Query credit: https://www.garysieling.com/blog/postgres-join-on-an-array-field/

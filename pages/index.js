@@ -1,8 +1,18 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import Cotter from "cotter";
 import { useEffect, useState } from "react";
-const cotterApiKeyId = process.env.NEXT_PUBLIC_COTTER_API_KEY_ID;
+import LoginWithMagicLinks from './components/LoginWithMagicLinks';
+
+const stytchPublicToken = process.env.STYTCH_PUBLIC_TOKEN
+const stytchProjectEnv = process.env.STYTCH_PROJECT_ENV
+
+const sdkStyle: StyleConfig = {
+    fontFamily: '"Helvetica New", Helvetica, sans-serif',
+    primaryColor: '#19303d',
+    primaryTextColor: '#090909',
+    width: '321px',
+    hideHeaderText: true,
+  };
 
 export default function Home() {
     const [clientProjects, setClientProjects] = useState(null);
@@ -17,20 +27,6 @@ export default function Home() {
     };
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-    // Shows the Cotter Login form and sets Access Token when authenticated
-    useEffect(() => {
-        const cotter = new Cotter(cotterApiKeyId);
-        cotter
-            .signInWithOTP()
-            .showEmailForm()
-            .then(payload => {
-                localStorage.setItem("ACCESS_TOKEN", payload.oauth_token.access_token);
-                setIsLoggedIn(true);
-                getClientProjects();
-            })
-            .catch(err => console.log(err));
-    }, []);
 
     // Sets local isLoggedIn variable
     useEffect(() => {
@@ -94,7 +90,7 @@ export default function Home() {
                         ) : (<p>You currently have no projects attached to this account.</p>)}
                         <p style={{textAlign: "center", cursor: "pointer"}} onClick={logOut}>Log Out</p>
                     </div>
-                ): (<p>Log in to view your projects.</p>)}
+                ): (<LoginWithMagicLinks />)}
                 <div id="cotter-form-container" style={{ width: 300, height: 200 }} />
             </main>
         </div>
