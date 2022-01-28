@@ -1,11 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { Session, withIronSession } from 'next-iron-session';
-
-// type NextIronRequest = NextApiRequest & { session: Session };
-
-// type APIHandler = (req: NextIronRequest, res: NextApiResponse<any>) => Promise<any>;
-
-// export type ServerSideProps = ({ req }: { req: NextIronRequest }) => Promise<any>;
+import { withIronSession } from 'next-iron-session';
 
 const withSession = (handler) =>
   withIronSession(handler, {

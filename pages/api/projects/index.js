@@ -1,4 +1,3 @@
-//import {CotterAccessToken} from "cotter-token-js";
 const {Pool} = require('pg');
 const connectionString = process.env.PG_CONNECTION_STRING;
 const pool = new Pool({
@@ -39,3 +38,13 @@ export default async (req, res) => {
         res.end("Server error. Something went wrong.");
     }
 }
+
+const getServerSidePropsHandler = async ({ req }) => {
+    // Get the user's session based on the request
+    const user = req.session.get('user') ?? null;
+    // const props: Props = { user };
+    // return { props };
+    return user
+  };
+  
+  export const getServerSideProps = getServerSidePropsHandler

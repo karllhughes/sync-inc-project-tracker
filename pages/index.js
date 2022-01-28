@@ -2,11 +2,12 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { useEffect, useState } from "react";
 import LoginWithMagicLinks from './components/LoginWithMagicLinks';
+import withSession from './lib/withSession';
+import { useRouter } from 'next/router'
 
-const stytchPublicToken = process.env.STYTCH_PUBLIC_TOKEN
-const stytchProjectEnv = process.env.STYTCH_PROJECT_ENV
+const stytchPublicToken = process.env.NEXT_PUBLIC_STYTCH_PUBLIC_TOKEN
 
-const sdkStyle: StyleConfig = {
+const sdkStyle = {
     fontFamily: '"Helvetica New", Helvetica, sans-serif',
     primaryColor: '#19303d',
     primaryTextColor: '#090909',
@@ -14,12 +15,28 @@ const sdkStyle: StyleConfig = {
     hideHeaderText: true,
   };
 
-export default function Home() {
+const callbacks = {
+    onEvent: (data) => {
+    // TODO: check whether the user exists in your DB
+        if (data.eventData.type === 'USER_EVENT_TYPE') {
+        console.log({
+            userId: data.eventData.userId,
+            email: data.eventData.email,
+        });
+        }
+    },
+    onSuccess: (data) => console.log(data),
+    onError: (data) => console.log(data),
+};
+
+export default function Home(props) {
     const [clientProjects, setClientProjects] = useState(null);
+    const { user_id } = props.user
+    const router = useRouter()
 
     // Gets this client's projects when they're logged in
     const getClientProjects = async () => {
-        const token = localStorage.getItem("ACCESS_TOKEN");
+        // const token = localStorage.getItem("ACCESS_TOKEN");
         const resp = await fetch("/api/projects", {
             headers: { Authorization: `Bearer ${token}` },
         });
@@ -30,15 +47,20 @@ export default function Home() {
 
     // Sets local isLoggedIn variable
     useEffect(() => {
-        if (localStorage.getItem("ACCESS_TOKEN") != null) {
+        if (user_id) {
             setIsLoggedIn(true);
         }
     }, []);
 
     // Deletes Access Token and logs user out
-    const logOut = () => {
+    const logOut = async ()  => {
         localStorage.removeItem("ACCESS_TOKEN");
         setIsLoggedIn(false);
+        
+        const resp = await fetch('/api/logout', { method: 'POST' });
+        if (resp.status === 200) {
+            router.push('/');
+        }
     };
 
     // Allow clients to mark a project as complete
@@ -90,9 +112,18 @@ export default function Home() {
                         ) : (<p>You currently have no projects attached to this account.</p>)}
                         <p style={{textAlign: "center", cursor: "pointer"}} onClick={logOut}>Log Out</p>
                     </div>
-                ): (<LoginWithMagicLinks />)}
+                ): (<LoginWithMagicLinks styles={styles} sdkStyle={sdkStyle} publicToken={stytchPublicToken} callbacks={callbacks} />)}
                 <div id="cotter-form-container" style={{ width: 300, height: 200 }} />
             </main>
         </div>
     )
 }
+
+const getServerSidePropsHandler = async ({ req }) => {
+    // Get the user's session based on the request
+    const user = req.session.get('user') ?? null;
+    const props = { user };
+    return { props };
+  };
+  
+export const getServerSideProps = withSession(getServerSidePropsHandler);
