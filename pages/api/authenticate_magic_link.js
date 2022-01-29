@@ -1,7 +1,7 @@
 // This API route authenticates a Stytch magic link.
-// import { Session } from 'next-iron-session';
 import withSession from '../lib/withSession';
 import loadStytch from '../lib/loadStytch';
+import { user } from 'pg/lib/defaults';
 
 export async function handler(req, res) {
   if (req.method === 'GET') {
@@ -11,11 +11,14 @@ export async function handler(req, res) {
     try {
       const resp = await client.magicLinks.authenticate(token);
       // Set session
-      console.log(resp)
       req.session.destroy();
+      let user_details = await client.users.get(resp.user_id)
+      console.log('email address: ', user_details.emails[0].email)
       req.session.set('user', {
         user_id: resp.user_id,
+        email: user_details.emails[0].email
       });
+      
       // Save additional user data here
       await req.session.save();
       return res.redirect('/');

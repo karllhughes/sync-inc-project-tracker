@@ -14,19 +14,16 @@ export default async (req, res) => {
     // Extract the token string
     const auth = await req.headers.authorization;
     const bearer = auth.split(" ");
-    const token = bearer[1];
+    const email = bearer[1];
 
     try {
-        // Decode the Cotter JWT, "decoded.payload.identifier" is the user's email
-        const decoded = {}//new CotterAccessToken(token);
-
         // Get design_projects by clients.email
         // Query credit: https://www.garysieling.com/blog/postgres-join-on-an-array-field/
         const query = `select design_projects.*
                        from design_projects
                                 join clients on clients.id = ANY (design_projects.client)
                        where clients.email like $1;`;
-        const {rows} = await pool.query(query, [decoded.payload.identifier]);
+        const {rows} = await pool.query(query, [email]);
 
         // Respond with results
         res.statusCode = 200;
@@ -38,13 +35,3 @@ export default async (req, res) => {
         res.end("Server error. Something went wrong.");
     }
 }
-
-const getServerSidePropsHandler = async ({ req }) => {
-    // Get the user's session based on the request
-    const user = req.session.get('user') ?? null;
-    // const props: Props = { user };
-    // return { props };
-    return user
-  };
-  
-  export const getServerSideProps = getServerSidePropsHandler

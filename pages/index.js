@@ -13,7 +13,7 @@ const sdkStyle = {
     primaryTextColor: '#090909',
     width: '321px',
     hideHeaderText: true,
-  };
+};
 
 const callbacks = {
     onEvent: (data) => {
@@ -31,30 +31,30 @@ const callbacks = {
 
 export default function Home(props) {
     const [clientProjects, setClientProjects] = useState(null);
-    const { user_id } = props.user
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    const { user_id, email } = props.user
+    
     const router = useRouter()
 
     // Gets this client's projects when they're logged in
     const getClientProjects = async () => {
-        // const token = localStorage.getItem("ACCESS_TOKEN");
-        const resp = await fetch("/api/projects", {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        setClientProjects(await resp.json());
+            const resp = await fetch("/api/projects", {
+                headers: { Authorization: `Bearer ${email}` },
+            });
+            setClientProjects(await resp.json());
     };
-
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     // Sets local isLoggedIn variable
     useEffect(() => {
         if (user_id) {
             setIsLoggedIn(true);
+            getClientProjects();
         }
     }, []);
 
     // Deletes Access Token and logs user out
     const logOut = async ()  => {
-        localStorage.removeItem("ACCESS_TOKEN");
         setIsLoggedIn(false);
         
         const resp = await fetch('/api/logout', { method: 'POST' });
@@ -122,7 +122,7 @@ export default function Home(props) {
 const getServerSidePropsHandler = async ({ req }) => {
     // Get the user's session based on the request
     const user = req.session.get('user') ?? null;
-    const props = { user };
+    const props = { user } ;
     return { props };
   };
   
