@@ -1,7 +1,6 @@
 // This API route authenticates a Stytch magic link.
 import withSession from '../lib/withSession';
 import loadStytch from '../lib/loadStytch';
-import { user } from 'pg/lib/defaults';
 
 export async function handler(req, res) {
   if (req.method === 'GET') {

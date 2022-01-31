@@ -5,6 +5,7 @@ import LoginWithMagicLinks from './components/LoginWithMagicLinks';
 import withSession from './lib/withSession';
 import { useRouter } from 'next/router'
 
+//These variables will be passed into the Stytch login component
 const stytchPublicToken = process.env.NEXT_PUBLIC_STYTCH_PUBLIC_TOKEN
 
 const sdkStyle = {
@@ -53,7 +54,7 @@ export default function Home(props) {
         }
     }, []);
 
-    // Deletes Access Token and logs user out
+    // Logs user out
     const logOut = async ()  => {
         setIsLoggedIn(false);
         
