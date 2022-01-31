@@ -1,14 +1,12 @@
-//import { Stytch } from 'stytch'
 import { Stytch } from '@stytch/stytch-react';
 import React from 'react';
-import REDIRECT_URL_BASE from '../lib/getRedirectBaseUrl';
 
 const magicLinksView = {
   products: ["emailMagicLinks"],
   emailMagicLinksOptions: {
-    loginRedirectURL: REDIRECT_URL_BASE + '/api/authenticate_magic_link',
+    loginRedirectURL: 'http://localhost:3000/api/authenticate_magic_link',
     loginExpirationMinutes: 30,
-    signupRedirectURL: REDIRECT_URL_BASE + '/api/authenticate_magic_link',
+    signupRedirectURL: 'http://localhost:3000/api/authenticate_magic_link',
     signupExpirationMinutes: 30,
     createUserAsPending: false,
   },
