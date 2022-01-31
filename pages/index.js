@@ -5,31 +5,6 @@ import LoginWithMagicLinks from './components/LoginWithMagicLinks';
 import withSession from './lib/withSession';
 import { useRouter } from 'next/router'
 
-//These variables will be passed into the Stytch login component
-const stytchPublicToken = process.env.NEXT_PUBLIC_STYTCH_PUBLIC_TOKEN
-
-const sdkStyle = {
-    fontFamily: '"Helvetica New", Helvetica, sans-serif',
-    primaryColor: '#19303d',
-    primaryTextColor: '#090909',
-    width: '321px',
-    hideHeaderText: true,
-};
-
-const callbacks = {
-    onEvent: (data) => {
-    // TODO: check whether the user exists in your DB
-        if (data.eventData.type === 'USER_EVENT_TYPE') {
-        console.log({
-            userId: data.eventData.userId,
-            email: data.eventData.email,
-        });
-        }
-    },
-    onSuccess: (data) => console.log(data),
-    onError: (data) => console.log(data),
-};
-
 export default function Home(props) {
     const [clientProjects, setClientProjects] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -54,7 +29,7 @@ export default function Home(props) {
         }
     }, []);
 
-    // Logs user out
+    // Logs a user out
     const logOut = async ()  => {
         setIsLoggedIn(false);
         
@@ -113,7 +88,7 @@ export default function Home(props) {
                         ) : (<p>You currently have no projects attached to this account.</p>)}
                         <p style={{textAlign: "center", cursor: "pointer"}} onClick={logOut}>Log Out</p>
                     </div>
-                ): (<LoginWithMagicLinks styles={styles} sdkStyle={sdkStyle} publicToken={stytchPublicToken} callbacks={callbacks} />)}
+                ): (<LoginWithMagicLinks styles={styles} />)}
                 <div id="cotter-form-container" style={{ width: 300, height: 200 }} />
             </main>
         </div>
