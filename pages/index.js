@@ -6,7 +6,10 @@ import withSession from './lib/withSession';
 import { useRouter } from 'next/router'
 
 export default function Home(props) {
+    //This state holds the projects associated with the user
     const [clientProjects, setClientProjects] = useState(null);
+    
+    //This state contains the logged in status of the user
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const { user_id, email } = props.user
@@ -89,7 +92,6 @@ export default function Home(props) {
                         <p style={{textAlign: "center", cursor: "pointer"}} onClick={logOut}>Log Out</p>
                     </div>
                 ): (<LoginWithMagicLinks styles={styles} />)}
-                <div id="cotter-form-container" style={{ width: 300, height: 200 }} />
             </main>
         </div>
     )

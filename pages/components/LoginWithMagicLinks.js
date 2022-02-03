@@ -1,8 +1,10 @@
 import { Stytch } from '@stytch/stytch-react';
 import React from 'react';
 
+//This is the Stytch public token associated with your project   
 const stytchPublicToken = process.env.NEXT_PUBLIC_STYTCH_PUBLIC_TOKEN
 
+//This is the style set for Stytch's SDK and can be customized
 const sdkStyle = {
     fontFamily: '"Helvetica New", Helvetica, sans-serif',
     primaryColor: '#19303d',
@@ -11,20 +13,7 @@ const sdkStyle = {
     hideHeaderText: true,
 };
 
-const callbacks = {
-    onEvent: (data) => {
-    // TODO: check whether the user exists in your DB
-        if (data.eventData.type === 'USER_EVENT_TYPE') {
-        console.log({
-            userId: data.eventData.userId,
-            email: data.eventData.email,
-        });
-        }
-    },
-    onSuccess: (data) => console.log(data),
-    onError: (data) => console.log(data),
-};
-
+//These are key parameters used in the Magic Link email sent to users; you will need to define the product and login / signup URLs, as seen below
 const magicLinksView = {
   products: ["emailMagicLinks"],
   emailMagicLinksOptions: {
@@ -45,7 +34,6 @@ const LoginWithMagicLinks = ({ styles }) => {
         publicToken={stytchPublicToken || ''}
         loginOrSignupView={magicLinksView}
         style = {sdkStyle}
-        callbacks={callbacks}
       />
     </div>
   );
