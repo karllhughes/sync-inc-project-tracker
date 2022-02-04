@@ -8,14 +8,17 @@ export async function handler(req, res) {
     const { token } = req.query;
     
     try {
-      const resp = await client.magicLinks.authenticate(token);
       // Set session
+      const resp = await client.magicLinks.authenticate(token, {session_duration_minutes: 20160});
+
       req.session.destroy();
-      let user_details = await client.users.get(resp.user_id)
-      console.log('email address: ', user_details.emails[0].email)
+      
+      //User's email address and token will be used in authentication and to pull projects
+      const user_details = await client.users.get(resp.user_id)
+
       req.session.set('user', {
-        user_id: resp.user_id,
-        email: user_details.emails[0].email
+        email: user_details.emails[0].email,
+        session_token: resp.session_token
       });
       
       // Save additional user data here

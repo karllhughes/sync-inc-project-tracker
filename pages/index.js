@@ -3,7 +3,6 @@ import styles from '../styles/Home.module.css'
 import { useEffect, useState } from "react";
 import LoginWithMagicLinks from './components/LoginWithMagicLinks';
 import withSession from './lib/withSession';
-import { useRouter } from 'next/router'
 
 export default function Home(props) {
     //This state holds the projects associated with the user
@@ -12,21 +11,12 @@ export default function Home(props) {
     //This state contains the logged in status of the user
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const { user_id, email } = props.user
-    
-    const router = useRouter()
-
-    // Gets this client's projects when they're logged in
-    const getClientProjects = async () => {
-            const resp = await fetch("/api/projects", {
-                headers: { Authorization: `Bearer ${email}` },
-            });
-            setClientProjects(await resp.json());
-    };
+    //User's session details
+    const { user } = props
 
     // Sets local isLoggedIn variable
     useEffect(() => {
-        if (user_id) {
+        if (user) {
             setIsLoggedIn(true);
             getClientProjects();
         }
@@ -37,10 +27,21 @@ export default function Home(props) {
         setIsLoggedIn(false);
         
         const resp = await fetch('/api/logout', { method: 'POST' });
-        if (resp.status === 200) {
-            router.push('/');
-        }
     };
+    
+    // Gets this client's projects when they're logged in
+    const getClientProjects = async () => {
+            const resp = await fetch("/api/projects", {
+                method: 'POST',
+                body: JSON.stringify({
+                    session_token: user.session_token,
+                    email: user.email
+                })
+            });
+            if (resp.status === 200) {
+                setClientProjects(await resp.json());
+            }
+    } 
 
     // Allow clients to mark a project as complete
     const markProjectComplete = async (e) => {
@@ -52,10 +53,11 @@ export default function Home(props) {
             return project
         }));
 
-        const token = localStorage.getItem("ACCESS_TOKEN");
         await fetch("/api/projects/" + completeProjectId, {
-            headers: { Authorization: `Bearer ${token}` },
             method: "PUT",
+            body: JSON.stringify({
+                session_token: user.session_token
+            })
         });
     };
 
